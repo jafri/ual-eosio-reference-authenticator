@@ -12,15 +12,14 @@ import { eosioLogo } from './eosioLogo'
 import { EOSIOAuthOptions, Name } from './interfaces'
 import { PlatformChecker } from './PlatformChecker'
 import { UALEOSIOAuthError } from './UALEOSIOAuthError'
-import { Api, JsonRpc } from '@jafri/eosjs2'
 
 export class EOSIOAuth extends Authenticator {
   private users: EOSIOAuthUser[] = []
   private eosioAuthIsLoading: boolean = false
   private initError: UALError | null = null
   private platformChecker: PlatformChecker = null
-  private rpc: JsonRpc = null
-  private api: Api = null
+  private rpc: any = null
+  private api: any = null
   public options?: EOSIOAuthOptions
 
   /**

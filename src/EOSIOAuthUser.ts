@@ -3,12 +3,8 @@ import { SignatureProviderInterface } from 'eosjs-signature-provider-interface'
 import { Chain, SignTransactionResponse, UALErrorType, User } from 'universal-authenticator-library'
 import * as bs58 from 'bs58'
 import { Api, JsonRpc } from '@jafri/eosjs2'
-import {
-  TextDecoder as NodeTextDecoder,
-  TextEncoder as NodeTextEncoder,
-} from 'text-encoding'
 
-const RIPEMD160 = require('eosjs/dist/ripemd').RIPEMD160.hash // tslint:disable-line
+import RIPEMD160 from 'ripemd-ts'
 
 import { EOSIOAuthOptions } from './interfaces'
 import { PlatformChecker } from './PlatformChecker'
@@ -16,26 +12,17 @@ import { UALEOSIOAuthError } from './UALEOSIOAuthError'
 
 export class EOSIOAuthUser extends User {
   public signatureProvider: SignatureProviderInterface
-  private textEncoder: TextEncoder | NodeTextEncoder
-  private textDecoder: TextDecoder | NodeTextDecoder
 
   constructor(
     private chain: Chain,
     private accountName: string,
-    private rpc: JsonRpc,
-    private api: Api,
+    private rpc: JsonRpc | null,
+    private api: Api | null,
     private options?: EOSIOAuthOptions,
   ) {
     super()
     this.rpc = rpc;
     this.api = api;
-    if (typeof(TextEncoder) !== 'undefined') {
-      this.textEncoder = TextEncoder
-      this.textDecoder = TextDecoder
-    } else {
-      this.textEncoder = NodeTextEncoder
-      this.textDecoder = NodeTextDecoder
-    }
   }
 
   public async init() {
@@ -134,7 +121,7 @@ export class EOSIOAuthUser extends User {
     const nonPrefixPublicKey = publicKey.substr(K1_PREFIX.length)
     const bytesWithChecksum = bs58.decode(nonPrefixPublicKey)
     const bytes = bytesWithChecksum.slice(0, bytesWithChecksum.length - 4)
-    const suffixBytes = Buffer.from(RIPEMD160(bytes)).slice(0, 4)
+    const suffixBytes = Buffer.from(RIPEMD160.hash(bytes)).slice(0, 4)
     const binaryPublicKey = Buffer.from([...bytes, ...suffixBytes])
     return `EOS${bs58.encode(binaryPublicKey)}`
   }
