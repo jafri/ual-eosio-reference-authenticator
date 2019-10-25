@@ -1,5 +1,4 @@
 import { Chain, UALErrorType } from 'universal-authenticator-library'
-import { Api, JsonRpc } from 'eosjs'
 
 import { EOSIOAuthUser } from './EOSIOAuthUser'
 import { PlatformChecker } from './PlatformChecker'
@@ -88,7 +87,7 @@ describe('EOSIOAuthUser', () => {
       const options = {
         appName: 'testAppName',
         securityExclusions: {
-          addAssertToTransactions: false 
+          addAssertToTransactions: false
         }
       }
       const eosioAuthUser = new EOSIOAuthUser(chain, 'testAccount', options)
@@ -141,19 +140,19 @@ describe('EOSIOAuthUser', () => {
     it('calls eosjs Api with the transaction and transaction configuration if given', async () => {
       const transactionConfig = { broadcast: false, blocksBehind: 6, expireSeconds: 90 }
       await eosioAuthUser.signTransaction(transaction, transactionConfig)
-  
+
       expect(transactMock).toHaveBeenCalledWith(transaction,  transactionConfig)
     })
 
     it('calls eosjs Api with the transaction and default configuration if none given', async () => {
       await eosioAuthUser.signTransaction(transaction, {})
-  
+
       expect(transactMock).toHaveBeenCalledWith(transaction,  { broadcast: true, blocksBehind: 3, expireSeconds: 30 })
     })
 
     it('signs transactions', async () => {
       const transactionResponse = await eosioAuthUser.signTransaction(transaction, { broadcast: true })
-  
+
       expect(transactionResponse).toEqual({
         wasBroadcast: true,
         transactionId: 'abcd',

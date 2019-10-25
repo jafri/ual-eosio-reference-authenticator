@@ -2,7 +2,7 @@
 import { SignatureProviderInterface } from 'eosjs-signature-provider-interface'
 import { Chain, SignTransactionResponse, UALErrorType, User } from 'universal-authenticator-library'
 import * as bs58 from 'bs58'
-import { Api, JsonRpc } from 'eosjs'
+import { Api, JsonRpc } from '@jafri/eosjs2'
 import {
   TextDecoder as NodeTextDecoder,
   TextEncoder as NodeTextEncoder,
@@ -16,19 +16,19 @@ import { UALEOSIOAuthError } from './UALEOSIOAuthError'
 
 export class EOSIOAuthUser extends User {
   public signatureProvider: SignatureProviderInterface
-  private api: Api | null
-  private rpc: JsonRpc | null
   private textEncoder: TextEncoder | NodeTextEncoder
   private textDecoder: TextDecoder | NodeTextDecoder
 
   constructor(
     private chain: Chain,
     private accountName: string,
+    private rpc: JsonRpc,
+    private api: Api,
     private options?: EOSIOAuthOptions,
   ) {
     super()
-    this.api = null
-    this.rpc = null
+    this.rpc = rpc;
+    this.api = api;
     if (typeof(TextEncoder) !== 'undefined') {
       this.textEncoder = TextEncoder
       this.textDecoder = TextDecoder
@@ -48,15 +48,6 @@ export class EOSIOAuthUser extends User {
       returnUrl,
       ...(this.options && this.options.securityExclusions && { securityExclusions: this.options.securityExclusions }),
       options: this.options
-    })
-    const rpcEndpoint = this.chain.rpcEndpoints[0]
-    const rpcEndpointString = this.buildRpcEndpoint(rpcEndpoint)
-    this.rpc = new JsonRpc(rpcEndpointString)
-    this.api = new Api({
-      rpc: this.rpc,
-      signatureProvider: this.signatureProvider,
-      textEncoder: new this.textEncoder(),
-      textDecoder: new this.textDecoder(),
     })
   }
 

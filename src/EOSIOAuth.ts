@@ -12,12 +12,15 @@ import { eosioLogo } from './eosioLogo'
 import { EOSIOAuthOptions, Name } from './interfaces'
 import { PlatformChecker } from './PlatformChecker'
 import { UALEOSIOAuthError } from './UALEOSIOAuthError'
+import { Api, JsonRpc } from '@jafri/eosjs2'
 
 export class EOSIOAuth extends Authenticator {
   private users: EOSIOAuthUser[] = []
   private eosioAuthIsLoading: boolean = false
   private initError: UALError | null = null
   private platformChecker: PlatformChecker = null
+  private rpc: JsonRpc = null
+  private api: Api = null
   public options?: EOSIOAuthOptions
 
   /**
@@ -25,8 +28,10 @@ export class EOSIOAuth extends Authenticator {
    * @param chains
    * @param options
    */
-  constructor(chains: Chain[], options?: EOSIOAuthOptions) {
+  constructor(chains: Chain[], rpc, api, options?: EOSIOAuthOptions) {
     super(chains, options)
+    this.rpc = rpc;
+    this.api = api;
     this.platformChecker = new PlatformChecker(this.options)
   }
 
@@ -75,7 +80,7 @@ export class EOSIOAuth extends Authenticator {
 
   public async login(accountName?: string): Promise<User[]> {
     for (const chain of this.chains) {
-      const user = await new EOSIOAuthUser(chain, accountName || '', this.options)
+      const user = await new EOSIOAuthUser(chain, accountName || '', this.rpc, this.api, this.options)
       await user.init()
       const isValid = await user.isAccountValid()
       if (!isValid) {
