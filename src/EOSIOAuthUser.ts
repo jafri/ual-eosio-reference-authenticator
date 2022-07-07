@@ -2,7 +2,7 @@
 import { SignatureProviderInterface } from 'eosjs-signature-provider-interface'
 import { Chain, SignTransactionResponse, UALErrorType, User } from 'universal-authenticator-library'
 import * as bs58 from 'bs58'
-import { Api, JsonRpc } from '@jafri/eosjs2'
+import { Api, JsonRpc } from '@proton/js'
 
 import RIPEMD160 from 'ripemd-ts'
 
