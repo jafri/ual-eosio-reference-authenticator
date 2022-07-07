@@ -1,6 +1,6 @@
 {
   "name": "@jafri/ual-eosio-reference-authenticator",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "main": "dist/index.js",
   "license": "MIT",
   "author": {
@@ -24,7 +24,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@jafri/eosjs2": "^20.0.1-e34c16e.174",
+    "@proton/js": "^26.1.36",
     "bs58": "^4.0.1",
     "eosjs-ios-browser-signature-provider-interface": "0.1.1",
     "eosjs-signature-provider-interface": "^0.1.2",
@@ -62,7 +62,7 @@
     "jest": "^24.9.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.11.0",
-    "typescript": "^3.2.2"
+    "typescript": "^4.7.4"
   },
   "repository": {
     "type": "git",
